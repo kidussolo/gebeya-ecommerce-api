@@ -4,6 +4,7 @@ const { check, validationResult} = require('express-validator');
 const imageUpload = require('../../middlewares/imageUpload');
 const Item = require('../../models/item');
 const auth = require('../../middlewares/auth');
+const checkObjectId = require('../../middlewares/checkObjectId');
 
 /**
  * @swagger
@@ -88,7 +89,7 @@ router.post(
  *      500:
  *        description: Internal server error
  */
-router.get('/item/:id', auth, async (req, res) => {
+router.get('/item/:id', auth, checkObjectId('id'), async (req, res) => {
     try {
         const id = req.params.id;
         let item = await Item.findOne({ _id: id });
@@ -121,7 +122,7 @@ router.get('/item/:id', auth, async (req, res) => {
  *      500:
  *        description: Internal server error
  */
-router.put('/item/:id', auth, async (req, res) => {
+router.put('/item/:id', auth, checkObjectId('id'), async (req, res) => {
     try {
         const id = req.params.id;
         let item = await Item.findByIdAndUpdate(id , req.body);
@@ -154,7 +155,7 @@ router.put('/item/:id', auth, async (req, res) => {
  *      500:
  *        description: Internal server error
  */
-router.delete('/item/:id', auth, async (req, res) => {
+router.delete('/item/:id', auth, checkObjectId('id'), async (req, res) => {
     try {
         const id = req.params.id;
         let item = await Item.findByIdAndRemove(id);
