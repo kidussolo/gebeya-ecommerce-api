@@ -6,8 +6,37 @@ const connect = require('./config/db');
 const login = require('./routes/auth/login');
 const signup = require('./routes/auth/signup');
 const item = require('./routes/item/item');
-
+const swaggerJSDoc = require('swagger-jsdoc');
+const swaggerUi = require('swagger-ui-express');
 const app = express();
+
+
+const swaggerOptions = {
+    swaggerDefinition: {
+        openapi: '3.0.1',
+        info: {
+            title: 'Gebeya E-commerce API',
+            version: '1.0.0',
+            description: 'Gebeya E-commerce API'
+        },
+        components: {
+            securitySchemes: {
+            Auth: {
+                type: 'apiKey',
+                in: 'header',
+                name: 'Authorization',
+                description: "Api authentication token",
+                bearerFormat: 'JWT',
+            }
+            }
+        }
+    },
+    apis: ['routes/auth/*.js', 'routes/item/*.js'],
+};
+
+const swaggerDocs = swaggerJSDoc(swaggerOptions);
+app.use('/api/v1/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
+
 
 const port = process.env.PORT || 5000
 

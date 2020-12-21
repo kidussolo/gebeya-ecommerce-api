@@ -5,9 +5,36 @@ const imageUpload = require('../../middlewares/imageUpload');
 const Item = require('../../models/item');
 const auth = require('../../middlewares/auth');
 
-// @route POST /item
-// @desc Add new item
-// @access private
+/**
+ * @swagger
+ * /api/v1/item:
+ *  post:
+ *    description: Add new item
+ *    parameters:
+ *      - in: body
+ *        schema:
+ *          type: object
+ *          properties:
+ *            name:
+ *              type: string
+ *            image:
+ *              type: string
+ *            price:
+ *              type: string
+ *            detail:
+ *              type: string
+ *            vendorName:
+ *              type: string
+ *    security:
+ *      - Auth: []
+ *    responses:
+ *      201:
+ *        description: Return the created item detail
+ *      400:
+ *        description: Input validation error
+ *      500:
+ *        description: Internal server error
+ */
 router.post(
     '/item',
     auth,
@@ -40,9 +67,27 @@ router.post(
     }
 );
 
-// @route GET /item/:id
-// @desc Get single item
-// @access private
+/**
+ * @swagger
+ * /api/v1/item/{id}:
+ *  get:
+ *    description: Get item by id
+ *    parameters:
+ *      - in: path
+ *        name: id
+ *        schema:
+ *          type: string
+ *        description: Item id
+ *    security:
+ *      - Auth: []
+ *    responses:
+ *      200:
+ *        description: Return the item detail
+ *      400:
+ *        description: Input validation error
+ *      500:
+ *        description: Internal server error
+ */
 router.get('/item/:id', auth, async (req, res) => {
     try {
         const id = req.params.id;
@@ -55,7 +100,27 @@ router.get('/item/:id', auth, async (req, res) => {
     }
 });
 
-
+/**
+ * @swagger
+ * /api/v1/item/{id}:
+ *  put:
+ *    description: Update item
+ *    parameters:
+ *      - in: path
+ *        name: id
+ *        schema:
+ *          type: string
+ *        description: Item id
+ *    security:
+ *      - Auth: []
+ *    responses:
+ *      200:
+ *        description: Return the updated item
+ *      400:
+ *        description: Input validation error
+ *      500:
+ *        description: Internal server error
+ */
 router.put('/item/:id', auth, async (req, res) => {
     try {
         const id = req.params.id;
@@ -68,6 +133,27 @@ router.put('/item/:id', auth, async (req, res) => {
     }
 });
 
+/**
+ * @swagger
+ * /api/v1/item/{id}:
+ *  delete:
+ *    description: Delete Item
+ *    parameters:
+ *      - in: path
+ *        name: id
+ *        schema:
+ *          type: string
+ *        description: Item id
+ *    security:
+ *      - Auth: []
+ *    responses:
+ *      200:
+ *        description: Return the deleted item
+ *      400:
+ *        description: Input validation error
+ *      500:
+ *        description: Internal server error
+ */
 router.delete('/item/:id', auth, async (req, res) => {
     try {
         const id = req.params.id;
@@ -80,6 +166,32 @@ router.delete('/item/:id', auth, async (req, res) => {
     }
 });
 
+/**
+ * @swagger
+ * /api/v1/item:
+ *  get:
+ *    description: Get all items with pagination and also sorted with there price
+ *    parameters:
+ *      - in: query
+ *        name: page
+ *        schema:
+ *          type: integer
+ *        description: Page number
+ *      - in: query
+ *        name: limit
+ *        schema:
+ *          type: integer
+ *        description: The number of returned data
+ *    security:
+ *      - Auth: []
+ *    responses:
+ *      200:
+ *        description: Return array of items
+ *      400:
+ *        description: Input validation error
+ *      500:
+ *        description: Internal server error
+ */
 router.get('/item', auth, async (req, res) => {
     try {
         const page = parseInt(req.query.page) || 1;

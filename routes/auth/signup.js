@@ -4,9 +4,28 @@ const bcrypt = require('bcrypt');
 const { check ,validationResult } = require('express-validator');
 const User = require('../../models/user');
 
-// @route POST /signup
-// @desc Signup a User
-// @access public
+/**
+ * @swagger
+ * /api/v1/signup:
+ *  post:
+ *    description: Used to signup a user
+ *    parameters:
+ *      - in: body
+ *        schema:
+ *          type: object
+ *          properties:
+ *            email:
+ *              type: string
+ *            password:
+ *              type: string
+ *    responses:
+ *      200:
+ *        description: Return a success message
+ *      400:
+ *        description: Input validation error
+ *      500:
+ *        description: Internal server error
+ */
 router.post('/signup', 
     [
         check('email', 'Email can not be empty!').not().isEmpty(), 

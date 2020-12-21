@@ -5,9 +5,28 @@ const jwt = require('jsonwebtoken');
 const { check, validationResult } = require('express-validator');
 const User = require('../../models/user');
 
-// @route POST /login
-// @desc User login
-// @access public 
+/**
+ * @swagger
+ * /api/v1/login:
+ *  post:
+ *    description: login users
+ *    parameters:
+ *      - in: body
+ *        schema:
+ *          type: object
+ *          properties:
+ *            email:
+ *              type: string
+ *            password:
+ *              type: string
+ *    responses:
+ *      200:
+ *        description: Return user authentication token
+ *      400:
+ *        description: Input validation error
+ *      500:
+ *        description: Internal server error
+ */
 router.post('/login', 
     [
         check('email', 'Email can not be empty!').not().isEmpty(), 
