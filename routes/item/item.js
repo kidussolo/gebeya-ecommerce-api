@@ -40,5 +40,45 @@ router.post(
     }
 );
 
+// @route GET /item/:id
+// @desc Get single item
+// @access private
+router.get('/item/:id', auth, async (req, res) => {
+    try {
+        const id = req.params.id;
+        let item = await Item.findOne({ _id: id });
+        if (!item) return res.status(404).json({ error: 'Item not found'});
+        res.status(200).json({ data: item });
+    } catch(error){
+        console.log(error);
+        return res.status(500).json({ error: 'Internal Server error'});
+    }
+});
+
+
+router.put('/item/:id', auth, async (req, res) => {
+    try {
+        const id = req.params.id;
+        let item = await Item.findByIdAndUpdate(id , req.body);
+        
+        res.status(200).json({data: item});
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({ error: 'Internal Server error'});
+    }
+});
+
+router.delete('/item/:id', auth, async (req, res) => {
+    try {
+        const id = req.params.id;
+        let item = await Item.findByIdAndRemove(id);
+        if (!item) return res.status(404).json({ error: 'Item not found!'});
+        res.status(200).json({data: item});
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({ error: 'Internal Server error'});
+    }
+});
+
 
 module.exports = router;
