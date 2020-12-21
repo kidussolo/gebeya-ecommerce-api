@@ -60,7 +60,7 @@ router.put('/item/:id', auth, async (req, res) => {
     try {
         const id = req.params.id;
         let item = await Item.findByIdAndUpdate(id , req.body);
-        
+
         res.status(200).json({data: item});
     } catch (error) {
         console.log(error);
@@ -79,6 +79,18 @@ router.delete('/item/:id', auth, async (req, res) => {
         return res.status(500).json({ error: 'Internal Server error'});
     }
 });
+
+router.get('/item', auth, async (req, res) => {
+    try {
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 10;
+        const item = await Item.find({}).limit(limit).skip((page-1) * limit).sort({created_at: -1, price: -1});
+        return res.status(200).json({ data: item });        
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({ error: 'Internal Server error'});
+    }
+})
 
 
 module.exports = router;
