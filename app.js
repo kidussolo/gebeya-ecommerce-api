@@ -3,6 +3,8 @@ const app = require('express')();
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const connect = require('./config/db');
+const login = require('./routes/auth/login');
+const signup = require('./routes/auth/signup');
 
 const port = process.env.PORT || 5000
 
@@ -16,6 +18,10 @@ app.get('/', (req, res) => {
 
 // Connect to db
 connect();
+
+// Routes
+app.use('/api/v1', login);
+app.use('/api/v1', signup);
 
 app.listen(port, () => {console.log(`Server running on port ${port}`)});
 
