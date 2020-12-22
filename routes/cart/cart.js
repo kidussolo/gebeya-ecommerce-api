@@ -159,4 +159,32 @@ router.delete('/empty-cart', auth, async (req, res) => {
   }
 });
 
+/**
+ * @swagger
+ * /api/v1/cart-detail:
+ *  get:
+ *    description: Used to view cart detail
+ *    security:
+ *      - Auth: []
+ *    responses:
+ *      200:
+ *        description: Return cart detail
+ *      400:
+ *        description: Input validation error
+ *      500:
+ *        description: Internal server error
+ */
+router.get('/cart-detail', auth, async (req, res) => {
+  try {
+    const cart = await Cart.findOne({user: req.user.id}, {user: 0}).populate({
+      path: 'items.itemId',
+      select: 'name',
+    });
+    res.status(200).json({data: cart});
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({error: 'Internal Server error'});
+  }
+});
+
 module.exports = router;
