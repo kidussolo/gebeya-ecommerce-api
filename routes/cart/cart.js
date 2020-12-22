@@ -4,7 +4,7 @@ const {body, validationResult} = require('express-validator');
 const Item = require('../../models/item');
 const Cart = require('../../models/cart');
 const auth = require('../../middlewares/auth');
-const {checkBodyObjectId} = require('../../middlewares/checkObjectId');
+const {checkBodyObjectId, checkObjectId} = require('../../middlewares/checkObjectId');
 const {prepareItem, updateCartItem} = require('../../utils/helpers');
 
 /**
@@ -89,5 +89,45 @@ router.post(
     }
   }
 );
+
+/**
+ * @swagger
+ * /api/v1/cart-item/{id}:
+ *  delete:
+ *    description: Get item by id
+ *    parameters:
+ *      - in: path
+ *        name: id
+ *        schema:
+ *          type: string
+ *        description: Item id
+ *    security:
+ *      - Auth: []
+ *    responses:
+ *      200:
+ *        description: Return cart after item removed
+ *      400:
+ *        description: Input validation error
+ *      500:
+ *        description: Internal server error
+ */
+router.delete('/cart-item/:id', auth, checkObjectId('id'), async (req, res) => {
+  try {
+    const cart = await Cart.findOne({user: req.user.id});
+    if (!cart) return res.status(404).json({error: 'Cart not found'});
+    const id = req.params.id;
+
+    let itemIndex = cart.items.findIndex((item) => item.itemId == id);
+
+    if (itemIndex == -1) return res.status(404).json({error: 'Item not found'});
+    cart.total = cart.total - cart.items[itemIndex].itemTotal;
+    cart.items.splice(itemIndex, 1);
+    await cart.save();
+    res.status(200).json({data: cart});
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({error: 'Internal Server error'});
+  }
+});
 
 module.exports = router;
