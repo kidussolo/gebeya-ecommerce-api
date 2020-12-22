@@ -4,7 +4,7 @@ const { check, validationResult} = require('express-validator');
 const imageUpload = require('../../middlewares/imageUpload');
 const Item = require('../../models/item');
 const auth = require('../../middlewares/auth');
-const checkObjectId = require('../../middlewares/checkObjectId');
+const { checkObjectId } = require('../../middlewares/checkObjectId');
 
 /**
  * @swagger
@@ -130,7 +130,10 @@ router.get('/item/:id', auth, checkObjectId('id'), async (req, res) => {
 router.put('/item/:id', auth, checkObjectId('id'), async (req, res) => {
     try {
         const id = req.params.id;
-        let item = await Item.findByIdAndUpdate(id , req.body);
+        const options = {
+            new: true
+        }
+        let item = await Item.findByIdAndUpdate(id , req.body, options);
 
         res.status(200).json({data: item});
     } catch (error) {
