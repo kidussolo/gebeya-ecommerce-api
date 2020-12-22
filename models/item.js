@@ -10,8 +10,13 @@ const ItemSchema = new mongoose.Schema({
         require: true
     },
     price: {
-        type: String,
+        type: Number,
         require: true
+    },
+    availableQuantity: {
+        type: Number,
+        required: true,
+        min: 0
     },
     detail: {
         type: String,

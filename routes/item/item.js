@@ -22,6 +22,8 @@ const checkObjectId = require('../../middlewares/checkObjectId');
  *              type: string
  *            price:
  *              type: string
+ *            availableQuantity:
+ *              type: integer
  *            detail:
  *              type: string
  *            vendorName:
@@ -42,7 +44,9 @@ router.post(
     imageUpload.upload.single('image'),
     [
         check('name', 'name can not be empty!').not().isEmpty(), 
-        check('price', 'Price can not be empty!').not().isEmpty()
+        check('price', 'Price can not be empty!').not().isEmpty(),
+        check('availableQuantity', 'availableQuantity can not be empty!').not().isEmpty()
+            .isInt({ min: 1}).withMessage('availableQuantity must be 1 or greater')
     ],
     async (req, res) => {
         try {
@@ -53,6 +57,7 @@ router.post(
                 name: req.body.name,
                 price: req.body.price,
                 detail: req.body.detail,
+                availableQuantity: req.body.availableQuantity,
                 vendorName: req.body.vendorName,
                 image: req.file.path
             }
