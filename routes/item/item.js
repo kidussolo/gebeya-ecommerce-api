@@ -177,7 +177,7 @@ router.delete('/item/:id', auth, checkObjectId('id'), async (req, res) => {
 
 /**
  * @swagger
- * /api/v1/item:
+ * /api/v1/items:
  *  get:
  *    description: Get all items with pagination and also sorted with there price
  *    parameters:
@@ -191,6 +191,11 @@ router.delete('/item/:id', auth, checkObjectId('id'), async (req, res) => {
  *        schema:
  *          type: integer
  *        description: The number of returned data
+ *      - in: query
+ *        name: price
+ *        schema:
+ *          type: string
+ *        description: items sorting order based on price    
  *    security:
  *      - Auth: []
  *    responses:
@@ -201,11 +206,12 @@ router.delete('/item/:id', auth, checkObjectId('id'), async (req, res) => {
  *      500:
  *        description: Internal server error
  */
-router.get('/item', auth, async (req, res) => {
+router.get('/items', auth, async (req, res) => {
     try {
         const page = parseInt(req.query.page) || 1;
         const limit = parseInt(req.query.limit) || 10;
-        const item = await Item.find({}).limit(limit).skip((page-1) * limit).sort({created_at: -1, price: -1});
+        const sortOrder = req.query.price || 'asc';
+        const item = await Item.find({}).limit(limit).skip((page-1) * limit).sort({price: sortOrder});
         return res.status(200).json({ data: item });        
     } catch (error) {
         console.log(error);
