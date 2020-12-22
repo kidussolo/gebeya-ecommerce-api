@@ -130,4 +130,33 @@ router.delete('/cart-item/:id', auth, checkObjectId('id'), async (req, res) => {
   }
 });
 
+
+/**
+ * @swagger
+ * /api/v1/empty-cart:
+ *  delete:
+ *    description: Empty user cart
+ *    security:
+ *      - Auth: []
+ *    responses:
+ *      200:
+ *        description: Return empty cart
+ *      400:
+ *        description: Input validation error
+ *      500:
+ *        description: Internal server error
+ */
+router.delete('/empty-cart', auth, async (req, res) => {
+  try {
+    const cart = await Cart.findOne({user: req.user.id});
+    cart.items = [];
+    cart.total = 0;
+    await cart.save();
+    res.status(200).json({data: cart});
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({error: 'Internal Server error'});
+  }
+});
+
 module.exports = router;
