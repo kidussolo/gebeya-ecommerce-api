@@ -2,7 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-const connect = require('./config/db');
+const db = require('./config');
 const login = require('./routes/auth/login');
 const signup = require('./routes/auth/signup');
 const item = require('./routes/item/item');
@@ -50,7 +50,7 @@ app.get('/', (req, res) => {
 });
 
 // Connect to db
-connect();
+db.connect();
 
 // Routes
 app.use(baseUrl, login);
